@@ -73,7 +73,7 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     cola_prioridad.push((estado_inicial, [], 0), 0 + h_inicial) # en la cola guardams: (estado, acciones, costo_acumulado), prioridad con heursitica
     
     # Conjunto para registrar estados ya expandidos
-    visitados = utils.counter()
+    visitados = utils.Counter()
 
     while not cola_prioridad.isEmpty():
         estado_actual, acciones, costo_actual = cola_prioridad.pop()
