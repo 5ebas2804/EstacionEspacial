@@ -1,6 +1,7 @@
 from typing import Tuple
 from algorithms import utils
 from algorithms.problems import SystemRepairProblem
+import math
 
 
 def nullHeuristic(state, problem=None):
@@ -9,6 +10,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
+
 
 
 def manhattanHeuristic(state, problem):
@@ -20,9 +22,23 @@ def manhattanHeuristic(state, problem):
     - K if the robot does not have the kit yet.
     - the nearest pending T if the robot has the kit and systems remain.
     - C if all systems have been repaired.
+    
+    abs(x2-x1)-abs(y2-y1)
     """
-    # TODO: Add your code here
-    utils.raiseNotDefined()
+    pos_i, hasKit, pendingSystems = state
+    x1, y1 = pos_i
+
+    if not hasKit:
+        pos_f = problem.kitPosition
+    elif len(pendingSystems) > 0:
+        pos_f = min(pendingSystems, key=lambda t: abs(t[0]-x1) + abs(t[1]-y1))
+    else:
+        pos_f = problem.controlPosition
+
+    x2, y2 = pos_f
+    return abs(x2 - x1) + abs(y2 - y1)
+    
+
 
 
 def euclideanHeuristic(state, problem):
@@ -34,9 +50,21 @@ def euclideanHeuristic(state, problem):
     - K if the robot does not have the kit yet.
     - the nearest pending T if the robot has the kit and systems remain.
     - C if all systems have been repaired.
+    
+    d= math.sqrt((x2-x1)**2-(y2-y1)**2)
     """
-    # TODO: Add your code here
-    utils.raiseNotDefined()
+    pos_i, hasKit, pendingSystems = state
+    x1, y1 = pos_i
+
+    if not hasKit:
+        pos_f = problem.kitPosition
+    elif len(pendingSystems) > 0:
+        pos_f = min(pendingSystems, key=lambda t: abs(t[0]-x1) + abs(t[1]-y1))
+    else:
+        pos_f = problem.controlPosition
+
+    x2, y2 = pos_f
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
 def systemRepairHeuristic(
