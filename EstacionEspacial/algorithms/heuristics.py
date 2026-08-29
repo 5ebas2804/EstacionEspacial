@@ -66,7 +66,11 @@ def euclideanHeuristic(state, problem):
     x2, y2 = pos_f
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
-
+    
+def distancia_manhattan(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return abs(x1-x2)+abs(y1-y2)
 def systemRepairHeuristic(
     state: Tuple[Tuple, bool, Tuple], problem: SystemRepairProblem
 ):
@@ -85,4 +89,16 @@ def systemRepairHeuristic(
     - Balance heuristic strength vs. computation time (do experiments!)
     """
     # TODO: Add your code here
-    utils.raiseNotDefined()
+    posicion, kit, reparos = state
+    if kit == False:
+        distancia= distancia_manhattan(posicion, problem.kitPosition)
+        if len(reparos) == 0:
+            return distancia + distancia_manhattan(problem.kitPosition, problem.controlPosition)
+        else:
+            return distancia_manhattan(posicion, problem.kitPosition)+ max(distancia_manhattan(problem.kitPosition, reparo) for reparo in reparos)  
+    elif kit == True and len(reparos) != 0: 
+        distancia_cercana = min(distancia_manhattan(posicion, reparo) for reparo in reparos)
+        distancia_lejana = max(distancia_manhattan(reparo, problem.controlPosition) for reparo in reparos)
+        return distancia_cercana + distancia_lejana
+    else:
+        return distancia_manhattan(posicion, problem.controlPosition)
